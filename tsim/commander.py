@@ -5,6 +5,7 @@ import rclpy
 import sys
 from std_msgs.msg import String
 import select
+import termios
 
 def main():
     # A flow of typical ROS program
@@ -17,19 +18,21 @@ def main():
     msg = String()
 
     def unix_callback():
+        fd = sys.stdin.fileno()
         # get the tty attributes [iflag, oflag, cflag, lflag, ispeed, ospeed, cc]
-        rclpy.logging.get_logger('top').info('Press Ctrl-C to exit...')
-        old = termios.tcgetattr(sys.stdin)
+        rclpy.logging.get_logger('top').info('Publishing keystrokes. Press Ctrl-C to exit.')
+        old = termios.tcgetattr(fd)
         new = old[:]
-        new[3] &= ~termios.ECHO # 3 == 'lflags'
-        termios.tcsetattr(sys.stdin, termios.TCSAFLUSH, new)
+        new[3] &=~ (termios.ICANON | termios.ECHO) # 3 == 'lflags'
+        new[6][termios.VEOL] = 1 # 6 == 'cc'
+        new[6][termios.VEOF] = 2
+        termios.tcsetattr(fd, termios.TCSANOW, new)
         timeout = 0
         read_ready = select.select([sys.stdin], [], [], timeout)[0]
         if read_ready == [sys.stdin]:
-            rclpy.logging.get_logger('top').info('Publishing keystrokes.')
             msg.data = sys.stdin.read(1)
             publisher.publish(msg)
-        termios.tcsetattr(sys.stdin, termios.TCSAFLUSH, old)
+        termios.tcsetattr(fd, termios.TCSANOW, old)
 
     def win_callback():
         if msvcrt.kbhit() == False:
