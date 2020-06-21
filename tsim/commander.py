@@ -11,24 +11,25 @@ def main():
     # 1. Initialization
     rclpy.init()
     # 2. Create one or more nodes
-    node = rclpy.create_node('remocon')
+    node = rclpy.create_node('commander')
     # 3. Process node callbacks
     publisher = node.create_publisher(String, 'direction', 10)
     msg = String()
 
     def unix_callback():
-        fd = sys.stdin.fileno()
         # get the tty attributes [iflag, oflag, cflag, lflag, ispeed, ospeed, cc]
-        old = termios.tcgetattr(fd)
+        rclpy.logging.get_logger('top').info('Press Ctrl-C to exit...')
+        old = termios.tcgetattr(sys.stdin)
         new = old[:]
         new[3] &= ~termios.ECHO # 3 == 'lflags'
-        termios.tcsetattr(fd, termios.TCSAFLUSH, new)
-        read_ready = select.select([sys.stdin], [], [], timeout = 0)[0]
-        if read_ready:
-            c = sys.stdin.read(1)
-            msg.data = c
+        termios.tcsetattr(sys.stdin, termios.TCSAFLUSH, new)
+        timeout = 0
+        read_ready = select.select([sys.stdin], [], [], timeout)[0]
+        if read_ready == [sys.stdin]:
+            rclpy.logging.get_logger('top').info('Publishing keystrokes.')
+            msg.data = sys.stdin.read(1)
             publisher.publish(msg)
-        termios.tcsetattr(fd, termios.TCSAFLUSH, old)
+        termios.tcsetattr(sys.stdin, termios.TCSAFLUSH, old)
 
     def win_callback():
         if msvcrt.kbhit() == False:
@@ -52,9 +53,9 @@ except ImportError:
     except ImportError:
         rclpy.logging.get_logger('top').info('Import Error, I quit!')
     else:
-        USE = 'termios'
+        USE = 'msvcrt'
 else:
-    USE = 'msvcrt'
+    USE = 'termios'
 
 if __name__ == '__main__':
     main()
