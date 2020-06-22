@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'commander = tsim.commander:main'
+            'commander = tsim.commander:main',
+            'motors = tsim.motors:main'
         ],
     },
 )
