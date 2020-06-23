@@ -14,7 +14,7 @@ def main():
     # 2. Create one or more nodes
     node = rclpy.create_node('commander')
     # 3. Process node callbacks
-    publisher = node.create_publisher(String, 'direction', 10)
+    publisher = node.create_publisher(String, 'keys', 10)
     msg = String()
 
     def unix_callback():

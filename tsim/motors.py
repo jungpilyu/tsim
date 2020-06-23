@@ -17,19 +17,17 @@ def main():
             'f' : 'right turn',
             'e' : 'move forward',
             'x' : 'move backward',
-            ' ' : 'stop'
         }
         act = commands.get(msg.data, 'Invalid command!')
         node.get_logger().info('Subscribing: {}'.format(act))
     # 3. Process node callbacks
-    subscriber = node.create_subscription(String, 'direction', callback, 10)
+    subscriber = node.create_subscription(String, 'keys', callback, 10)
     node.get_logger().info('Topic subscribed: {}'.format(subscriber.topic))
-    node.get_logger().info(""" Key - Direction mapping
+    print(""" Key - Direction mapping
             a : left turn,
             f : right turn,
             e : move forward,
-            x : move backward,
-           ' ': stop""")
+            x : move backward""")
     rclpy.spin(node)
     # 4. Shutdown
     node.destroy_node()
