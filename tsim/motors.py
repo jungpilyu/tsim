@@ -13,8 +13,8 @@ def main():
     def callback(msg):
         nonlocal node
         commands = {
-            'a' : 'left turn',
-            'f' : 'right turn',
+            'a' : 'turn left',
+            'f' : 'turn right',
             'e' : 'move forward',
             'x' : 'move backward',
         }
@@ -24,9 +24,9 @@ def main():
     subscriber = node.create_subscription(String, 'keys', callback, 10)
     node.get_logger().info('Topic subscribed: {}'.format(subscriber.topic))
     print(""" Key - Direction mapping
-            a : left turn,
-            f : right turn,
-            e : move forward,
+            a : turn left
+            f : turn right
+            e : move forward
             x : move backward""")
     rclpy.spin(node)
     # 4. Shutdown
