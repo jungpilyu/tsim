@@ -22,7 +22,8 @@ setup(
         'console_scripts': [
             'commander = tsim.commander:main',
             'motors = tsim.motors:main',
-            'locator = tsim.locator:main'
+            'locator = tsim.locator:main',
+            'requester = tsim.requester:main',
         ],
     },
 )
