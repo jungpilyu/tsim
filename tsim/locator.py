@@ -42,7 +42,7 @@ def main(args=None):
         nonlocal node, robot_x, robot_y, head
         global move
         act = move.get(msg.data, 'Invalid command!')
-        if act == 'Invalid command':
+        if act == 'Invalid command!':
             return
         if head == 'north':
             robot_y += act[0]

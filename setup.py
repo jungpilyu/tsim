@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             'commander = tsim.commander:main',
-            'motors = tsim.motors:main'
+            'motors = tsim.motors:main',
+            'locator = tsim.locator:main'
         ],
     },
 )
