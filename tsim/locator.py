@@ -58,9 +58,9 @@ def main(args=None):
             head = head_west.get(act[1], 'west')
     def reset_callback(request, response):
         nonlocal node, robot_x, robot_y, head
-        response.x = robot_x = 0
-        response.y = robot_y = 0
-        response.head = head = 'north'
+        robot_x = 0
+        robot_y = 0
+        head = 'north'
         node.get_logger().info('Reset Position')
         return response
     def pos_callback(request, response):

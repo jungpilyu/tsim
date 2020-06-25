@@ -12,8 +12,9 @@ def main(args=None):
     rclpy.init(args=args)
     # 2. Create one or more nodes
     node = rclpy.create_node('requester')
-    client_gp = node.create_client(GetPosition, 'get_position')
-    client_rs = node.create_client(Empty, 'reset')
+    cb_group = rclpy.callback_groups.ReentrantCallbackGroup()
+    client_gp = node.create_client(GetPosition, 'get_position', callback_group=cb_group)
+    client_rs = node.create_client(Empty, 'reset', callback_group=cb_group)
     ready = False
     while not ready:
         node.get_logger().info('waiting for the service availablity.')
