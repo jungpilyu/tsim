@@ -10,24 +10,22 @@ def main():
     rclpy.init()
     # 2. Create one or more nodes
     node = rclpy.create_node('motors')
+    commands = {
+        'a' : 'turn left',
+        'f' : 'turn right',
+        'e' : 'move forward',
+        'x' : 'move backward',
+        'r' : 'reset robot',
+        'q' : 'show robot position',
+    }
+    print(commands)
     def callback(msg):
         nonlocal node
-        commands = {
-            'a' : 'turn left',
-            'f' : 'turn right',
-            'e' : 'move forward',
-            'x' : 'move backward',
-        }
         act = commands.get(msg.data, 'Invalid command!')
         node.get_logger().info('Subscribing: {}'.format(act))
     # 3. Process node callbacks
     subscriber = node.create_subscription(String, 'keys', callback, 10)
     node.get_logger().info('Topic subscribed: {}'.format(subscriber.topic))
-    print(""" Key - Direction mapping
-            a : turn left
-            f : turn right
-            e : move forward
-            x : move backward""")
     rclpy.spin(node)
     # 4. Shutdown
     node.destroy_node()
