@@ -30,7 +30,7 @@ def main():
         read_only = False,
         floating_point_range = [fp_range]
     )
-    param = node.declare_parameter('key-in-period', value = 0.2, 
+    param = node.declare_parameter('key_in_period', value = 0.2, 
                         descriptor = pd, ignore_override=False)
     # 3. Process node callbacks
     publisher = node.create_publisher(String, 'keys', 10)
@@ -50,7 +50,7 @@ def main():
 
     def before_parameter(param_list: [rclpy.parameter.Parameter]):
         nonlocal timer
-        p_list = [its for its in param_list if its.name == 'key-in-period']
+        p_list = [its for its in param_list if its.name == 'key_in_period']
         period = p_list[0].get_parameter_value().double_value
         node.destroy_timer(timer)
         timer = node.create_timer(timer_period_sec = period, callback = unix_callback)
@@ -60,7 +60,7 @@ def main():
     def after_parameter(msg: ParameterEvent):
         if msg.node != '/commander':
             return
-        param_msg_list = [its for its in msg.changed_parameters if its.name == 'key-in-period']
+        param_msg_list = [its for its in msg.changed_parameters if its.name == 'key_in_period']
         name = param_msg_list[0].name
         value = param_msg_list[0].value.double_value
         node.get_logger().info(

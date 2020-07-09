@@ -11,13 +11,22 @@ def main():
     # 2. Create one or more nodes
     node = rclpy.create_node('motors')
     commands = {
-        'a' : 'turn left',
-        'f' : 'turn right',
-        'e' : 'move forward',
-        'x' : 'move backward',
-        'r' : 'reset robot',
-        'q' : 'show robot position',
+        'a' : 'turn_left',
+        'f' : 'turn_right',
+        'e' : 'move_forward',
+        'x' : 'move_backward',
+        'r' : 'reset_robot',
+        'q' : 'show_robot_position',
     }
+    param_dict = {v : node.declare_parameter(v, k) for k,v in commands.items()}
+    new_cmds = {}
+    for _, v in commands.items():
+        new_key = param_dict[v].get_parameter_value().string_value
+        new_cmds[new_key] = v
+        # print('{} : {}'.format(new_key, v))
+    commands.clear()
+    commands = new_cmds
+
     print(commands)
     def callback(msg):
         nonlocal node

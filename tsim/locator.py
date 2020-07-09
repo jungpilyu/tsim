@@ -7,10 +7,10 @@ from std_srvs.srv import Empty
 from std_msgs.msg import String
 
 move = {
-    'a' : (0, 'turn left'),
-    'f' : (0, 'turn right'),
-    'e' : (1, 'move forward'),
-    'x' : (-1, 'move backward'),
+    'a' : (0, 'turn_left'),
+    'f' : (0, 'turn_right'),
+    'e' : (1, 'move_forward'),
+    'x' : (-1, 'move_backward'),
 }
 head_north = {
     'turn left' : 'west',
