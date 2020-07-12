@@ -1,0 +1,19 @@
+# <ROS2 rcl parameter parser syntax>
+#<node_namespace_string>:  # optional
+#  <node1_name>:
+#    ros__parameters:
+#      <field_name>: <field_value>
+#      <parameter_namespace_string>:   # optional
+#        <field1_name>: <field1_value>
+#        <field2_name>: <field2_value>
+
+motors:
+  ros__parameters:
+    turn_left          : a
+    turn_right         : f
+    move_forward       : e
+    move_backward      : x
+requester:
+  ros__parameters:
+    reset_robot        : '4'
+    show_robot_position: '1'

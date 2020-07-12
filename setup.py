@@ -11,6 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name, ['launch/tsim_launch.py']),
+        ('share/' + package_name, ['config/param.yaml'])
     ],
     install_requires=['setuptools'],
     zip_safe=True,

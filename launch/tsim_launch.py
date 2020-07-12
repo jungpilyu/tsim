@@ -1,5 +1,7 @@
 import launch
 from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
+from os.path import join
 
 def generate_launch_description():
     ld = launch.LaunchDescription()
@@ -12,6 +14,9 @@ def generate_launch_description():
     #     shell = True,
     #     output = 'screen',
     # ))
+
+    parameter_path = join(get_package_share_directory('tsim'), 'param.yaml')
+
     ld.add_action(Node(
         package ='tsim',
         executable ='commander',
@@ -28,7 +33,7 @@ def generate_launch_description():
         output='screen',
         additional_env={'PYTHONUNBUFFERED': '1'},
         prefix = 'xterm -e',
-        parameters = [{'param.yaml'}]
+        parameters = [parameter_path]
     ))
     ld.add_action(Node(
         package='tsim',
@@ -39,6 +44,9 @@ def generate_launch_description():
         package='tsim',
         executable='requester',
         name='requester',
+        output='screen',
+        additional_env={'PYTHONUNBUFFERED': '1'},
+        parameters = [parameter_path]
     ))
     
 

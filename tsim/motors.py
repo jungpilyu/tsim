@@ -15,16 +15,13 @@ def main():
         'f' : 'turn_right',
         'e' : 'move_forward',
         'x' : 'move_backward',
-        'r' : 'reset_robot',
-        'q' : 'show_robot_position',
     }
-    param_dict = {v : node.declare_parameter(v, k) for k,v in commands.items()}
+    param_dict = {v : node.declare_parameter(v, k) for k, v in commands.items()}
     new_cmds = {}
     for _, v in commands.items():
         new_key = param_dict[v].get_parameter_value().string_value
         new_cmds[new_key] = v
         # print('{} : {}'.format(new_key, v))
-    commands.clear()
     commands = new_cmds
 
     print(commands)
