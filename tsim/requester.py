@@ -25,7 +25,8 @@ def main(args=None):
         new_value = param_dict[k].get_parameter_value().string_value
         service[k] = new_value
         # node.get_logger().info('{} : {}'.format(k, new_value))
-
+    print(service)
+    
     ready = False
     while not ready:
         node.get_logger().info('waiting for the service availablity.')

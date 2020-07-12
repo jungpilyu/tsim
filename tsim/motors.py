@@ -28,7 +28,8 @@ def main():
     def callback(msg):
         nonlocal node
         act = commands.get(msg.data, 'Invalid command!')
-        node.get_logger().info('Subscribing: {}'.format(act))
+        if act != 'Invalid command!':
+            node.get_logger().info('Subscribing: {}'.format(act))
     # 3. Process node callbacks
     subscriber = node.create_subscription(String, 'keys', callback, 10)
     node.get_logger().info('Topic subscribed: {}'.format(subscriber.topic))
