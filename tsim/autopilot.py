@@ -3,12 +3,13 @@
 import rclpy
 from tsim_interfaces.action import AutoPilot
 from tsim_interfaces.srv import GetPosition
+import time
 
-commands = {
-        'a' : 'turn_left',
-        'f' : 'turn_right',
-        'e' : 'move_forward',
-        'x' : 'move_backward',
+cmd = {
+        'turn_left' : 'a',
+        'turn_right' : 'f',
+        'move_forward' : 'e',
+        'move_backward' : 'x',
     }
 
 def main():
@@ -24,12 +25,54 @@ def main():
         node.get_logger().info('waiting for the service availablity.')
         ready = client.wait_for_service(timeout_sec = 1.0)
     
-    current_position = GetPosition()
+    current_position = GetPosition.Response()
     async def execute_callback(goal_handle):
         """Generate autopilot sequence"""
-        
+        nonlocal current_position
+        # align x-axis position
+        goal_head = 'east' if current_position.x < goal_handle.request.goal_x else 'west'
+
+        feedback = AutoPilot.Feedback()
+        feedback.partial_cmds = []
+        while current_position.head != goal_head:
+            feedback.partial_cmds.append(cmd['turn_left'])
+            node.get_logger().info('auto steering: turn left')
+            goal_handle.publish_feedback(feedback)
+            time.sleep(1)
+            req = GetPosition.Request()
+            current_position = await client.call_async(req)
+
+        while current_position.x != goal_handle.request.goal_x:
+            feedback.partial_cmds.append(cmd['move_forward'])
+            node.get_logger().info('auto steering: move forward')
+            goal_handle.publish_feedback(feedback)
+            time.sleep(1)
+            req = GetPosition.Request()
+            current_position = await client.call_async(req)
+
+        goal_head = 'north' if current_position.y < goal_handle.request.goal_y else 'south'
+        while current_position.head != goal_head:
+            feedback.partial_cmds.append(cmd['turn_left'])
+            node.get_logger().info('auto steering: turn left')
+            goal_handle.publish_feedback(feedback)
+            time.sleep(1)
+            req = GetPosition.Request()
+            current_position = await client.call_async(req)
+
+        while current_position.y != goal_handle.request.goal_y:
+            feedback.partial_cmds.append(cmd['move_forward'])
+            node.get_logger().info('auto steering: move forward')
+            goal_handle.publish_feedback(feedback)
+            time.sleep(1)
+            req = GetPosition.Request()
+            current_position = await client.call_async(req)
+
+        result = AutoPilot.Result()
+        result.cmds = feedback.partial_cmds
+        goal_handle.succeed()
+        return result
     
-    def goal_callback(goal_request):
+    async def goal_callback(goal_request):
         """Accepts or rejects a client request to begin an action."""
         nonlocal current_position
         # request GetPosition service
