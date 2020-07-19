@@ -26,6 +26,7 @@ setup(
             'motors = tsim.motors:main',
             'locator = tsim.locator:main',
             'requester = tsim.requester:main',
+            'autopilot = tsim.autopilot:main',
         ],
     },
 )

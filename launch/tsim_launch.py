@@ -5,7 +5,7 @@ from os.path import join
 
 def generate_launch_description():
     ld = launch.LaunchDescription()
-    #ld.add_action(launch.actions.SetLaunchConfiguration('launch-prefix', 'xterm -e'))
+    ld.add_action(launch.actions.SetLaunchConfiguration('launch-prefix', 'xterm -e'))
 
     # ld.add_action(launch.actions.ExecuteProcess(
     #     cmd = ['ros2 run --prefix "xterm -e" tsim commander --ros-args -p key_in_period:=2.0'],
@@ -39,6 +39,9 @@ def generate_launch_description():
         package='tsim',
         executable='locator',
         name='locator',
+        output='screen',
+        additional_env={'PYTHONUNBUFFERED': '1'},
+        prefix = 'xterm -e'
     ))
     ld.add_action(Node(
         package='tsim',
@@ -48,7 +51,15 @@ def generate_launch_description():
         additional_env={'PYTHONUNBUFFERED': '1'},
         parameters = [parameter_path]
     ))
-    
+    ld.add_action(Node(
+        package='tsim',
+        executable='autopilot',
+        name='autopilot',
+        output='screen',
+        additional_env={'PYTHONUNBUFFERED': '1'},
+        prefix = 'xterm -e'
+    ))
+
 
     return ld
 

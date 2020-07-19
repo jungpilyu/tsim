@@ -13,20 +13,20 @@ move = {
     'x' : (-1, 'move_backward'),
 }
 head_north = {
-    'turn left' : 'west',
-    'turn right' : 'east',
+    'turn_left' : 'west',
+    'turn_right' : 'east',
 }
 head_south = {
-    'turn left' : 'east',
-    'turn right' : 'west',
+    'turn_left' : 'east',
+    'turn_right' : 'west',
 }
 head_east = {
-    'turn left' : 'north',
-    'turn right' : 'south',
+    'turn_left' : 'north',
+    'turn_right' : 'south',
 }
 head_west = {
-    'turn left' : 'south',
-    'turn right' : 'north',
+    'turn_left' : 'south',
+    'turn_right' : 'north',
 }
 
 def main(args=None):
@@ -56,6 +56,7 @@ def main(args=None):
         else: # head == 'west'
             robot_x -= act[0]
             head = head_west.get(act[1], 'west')
+        #print('x {}, y {}, head {}'.format(act, robot_x, robot_y, head))
     def reset_callback(request, response):
         nonlocal node, robot_x, robot_y, head
         robot_x = 0

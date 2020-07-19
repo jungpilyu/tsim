@@ -4,6 +4,8 @@ import rclpy
 from tsim_interfaces.action import AutoPilot
 from tsim_interfaces.srv import GetPosition
 import time
+from rclpy.action import ActionServer
+from action_msgs.msg import GoalStatus
 
 cmd = {
         'turn_left' : 'a',
@@ -41,6 +43,9 @@ def main():
             time.sleep(1)
             req = GetPosition.Request()
             current_position = await client.call_async(req)
+        # if goal_handle.status == GoalStatus.STATUS_CANCELED:
+        #     node.get_logger().info('Goal canceled')
+        #     return AutoPilot.Result()
 
         while current_position.x != goal_handle.request.goal_x:
             feedback.partial_cmds.append(cmd['move_forward'])
@@ -89,6 +94,7 @@ def main():
     def cancel_callback(goal_handle):
         """Accepts or rejects a client request to cancel an action."""
         node.get_logger().info('Destination goal canceled!')
+        goal_handle.canceled()
         return rclpy.action.CancelResponse.ACCEPT
 
     # 3. Process node callbacks
@@ -99,7 +105,7 @@ def main():
             cancel_callback=cancel_callback)
     node.get_logger().info('Action server in action!')
 
-    rclpy.spin(node, executor=rclpy.executors.MultiThreadedExecutor)
+    rclpy.spin(node, executor=rclpy.executors.MultiThreadedExecutor())
     # 4. Shutdown
     action_server.destroy()
     node.destroy_node()
