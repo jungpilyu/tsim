@@ -23,7 +23,7 @@ def generate_launch_description():
         name ='commander',
         output ='screen',
         additional_env={'PYTHONUNBUFFERED': '1'},
-        prefix = 'xterm -e',
+        prefix = 'xterm -e ',#prefix = 'xterm -e python3 -m pdb',
         parameters = [{'key_in_period': 1.0}]
     ))
     ld.add_action(Node(
@@ -74,4 +74,4 @@ if __name__ == '__main__':
     #ls = LaunchService(debug=True)
     ls = launch.LaunchService()
     ls.include_launch_description(ld)
-    ls.run()
+    ls.run(shutdown_when_idle = False)

@@ -40,17 +40,22 @@ def main():
             feedback.partial_cmds.append(cmd['turn_left'])
             node.get_logger().info('auto steering: turn left')
             goal_handle.publish_feedback(feedback)
+            if goal_handle.is_cancel_requested:
+                node.get_logger().info('Goal canceled')
+                goal_handle.canceled()
+                return AutoPilot.Result()
             time.sleep(1)
             req = GetPosition.Request()
             current_position = await client.call_async(req)
-        # if goal_handle.status == GoalStatus.STATUS_CANCELED:
-        #     node.get_logger().info('Goal canceled')
-        #     return AutoPilot.Result()
 
         while current_position.x != goal_handle.request.goal_x:
             feedback.partial_cmds.append(cmd['move_forward'])
             node.get_logger().info('auto steering: move forward')
             goal_handle.publish_feedback(feedback)
+            if goal_handle.is_cancel_requested:
+                node.get_logger().info('Goal canceled')
+                goal_handle.canceled()
+                return AutoPilot.Result()
             time.sleep(1)
             req = GetPosition.Request()
             current_position = await client.call_async(req)
@@ -60,6 +65,10 @@ def main():
             feedback.partial_cmds.append(cmd['turn_left'])
             node.get_logger().info('auto steering: turn left')
             goal_handle.publish_feedback(feedback)
+            if goal_handle.is_cancel_requested:
+                node.get_logger().info('Goal canceled')
+                goal_handle.canceled()
+                return AutoPilot.Result()
             time.sleep(1)
             req = GetPosition.Request()
             current_position = await client.call_async(req)
@@ -68,6 +77,11 @@ def main():
             feedback.partial_cmds.append(cmd['move_forward'])
             node.get_logger().info('auto steering: move forward')
             goal_handle.publish_feedback(feedback)
+            if goal_handle.is_cancel_requested:
+                node.get_logger().info('Goal canceled')
+                goal_handle.canceled()
+                return AutoPilot.Result()
+            
             time.sleep(1)
             req = GetPosition.Request()
             current_position = await client.call_async(req)
@@ -94,7 +108,6 @@ def main():
     def cancel_callback(goal_handle):
         """Accepts or rejects a client request to cancel an action."""
         node.get_logger().info('Destination goal canceled!')
-        goal_handle.canceled()
         return rclpy.action.CancelResponse.ACCEPT
 
     # 3. Process node callbacks

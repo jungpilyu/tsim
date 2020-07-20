@@ -69,6 +69,8 @@ def main():
             msg.data = result[-1]
             publisher.publish(msg)
             node.get_logger().info('Goal succeeded! ')
+        elif status == GoalStatus.STATUS_CANCELED:
+            node.get_logger().info('Goal canceled')
         else:
             node.get_logger().info('Goal failed with status code: {}'.format(status))
         node.destroy_timer(timer)
